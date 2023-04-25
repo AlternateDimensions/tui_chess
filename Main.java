@@ -1,10 +1,11 @@
 import java.util.Scanner;
 
-
 public class Main {
 	private static boolean chatGPT = false;
 	private static int timer = 5;
 	private static Object[] settingVals = {chatGPT, timer, ""};
+	private static Scanner in;
+
 
 	public static void main (String[] args) {
 		String[] options = {"PLAY", "OPTIONS", "QUIT"};
@@ -21,25 +22,26 @@ public class Main {
 			Util.divider(false, true);
 			
 			System.out.print(Colors.RANDOM() + Colors.BOLD + "Select Option >>> | " + Colors.UNDERLINE);
-			Scanner in = new Scanner(System.in);
+
 			try{
+				in = new Scanner(System.in);
 				while(System.in.available() > 0) {
 					System.in.read(new byte[System.in.available()]);
 				}
-			} catch (Exception e){}
+			} catch (Exception aaaaa){}
+
 			String input = in.nextLine().toLowerCase();
-			in.close();
+
 			switch (input){
 				case "play": case "1": case "p":
 					play();
 					break;
 				
 				case "2": case "o": case "options":
-					options();
+					options(in);
 					break;
 
 				case "3": case "exit": case "quit": case "q": case "x":
-					in.close();
 					running = false;
 					break;
 
@@ -50,14 +52,16 @@ public class Main {
 
 			Util.clear();
 		}
+		in.close();
 	}
 
 	private static void play(){
-
+		
 	}
 
-	private static void options(){
+	private static void options(Scanner in){
 		boolean running = true;
+
 		while (running){
 			Util.clear();
 			String[] settings = {"ChatGPT Mode", "Timer (Minutes)", "Quit"};
@@ -76,15 +80,17 @@ public class Main {
 			
 			Util.divider(false, true);
 			System.out.print(Colors.RANDOM() + Colors.BOLD + "Edit Option >>> | " + Colors.UNDERLINE);
-			Scanner in = new Scanner(System.in);
+
 			try{
+				in = new Scanner(System.in);
 				while(System.in.available() > 0) {
 					System.in.read(new byte[System.in.available()]);
 				}
-			} catch (Exception e){}
-			String input = in.nextLine().toLowerCase();
-			in.close();
-			switch (input){
+			} catch (Exception aaaaa){}
+
+			String optionInput = in.nextLine().toLowerCase();
+			
+			switch (optionInput){
 				case "chatgpt": case "1": case "c": case "chat": case "gpt":
 					System.out.println(Colors.CLEAR + Colors.BOLD + Colors.YELLOW +"[!!] ChatGPT mode has been toggled! [!!]" + Colors.CLEAR);
 					chatGPT = !chatGPT;
@@ -97,15 +103,17 @@ public class Main {
 					while (needValidTime){
 						try{
 							System.out.print(Colors.CLEAR + Colors.RANDOM() + Colors.BOLD + "Input new timer value >>> | " + Colors.UNDERLINE);
-							Scanner inVal = new Scanner(System.in);
+							
 							try{
+								in = new Scanner(System.in);
 								while(System.in.available() > 0) {
 									System.in.read(new byte[System.in.available()]);
 								}
-							} catch (Exception e){}
-							String inputVal = inVal.nextLine().toLowerCase();
-							inVal.close();
-							timer = Integer.parseInt(inputVal);
+							} catch (Exception aaaaa){}
+
+							String valueInput = in.nextLine().toLowerCase();
+
+							timer = Integer.parseInt(valueInput);
 							System.out.println(Colors.CLEAR + Colors.BOLD + Colors.YELLOW +"[!!] Timer has been adjusted! [!!]" + Colors.CLEAR);
 							needValidTime = false;
 							updateVals();
@@ -125,6 +133,7 @@ public class Main {
 				default:
 					System.out.println(Colors.RED + "[!!] Not a valid option! [!!]");
 					Util.wait(3.0);
+			in.close();
 			}
 		}
 	}
