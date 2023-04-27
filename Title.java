@@ -6,7 +6,7 @@ public class Title {
 	private static String five =  "░░░██║░░░╚██████╔╝██║░░░░░░╚█████╔╝██║░░██║███████╗██████╔╝██████╔╝";
 	private static String six =   "░░░╚═╝░░░░╚═════╝░╚═╝░░░░░░░╚════╝░╚═╝░░╚═╝╚══════╝╚═════╝░╚═════╝░";
 	
-	public static void printTitle(){
+	public static void printTitle() throws Exception {
 		Util.clear();
 		System.out.print("\n");
 		String sOne = Colors.RANDOM(), sTwo = Colors.RANDOM(), sThree = Colors.RANDOM(), sFour = Colors.RANDOM(), sFive = Colors.RANDOM(), sSix = Colors.RANDOM();

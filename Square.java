@@ -1,11 +1,16 @@
-public class Square {
+public class Square extends GenericChessObject {
 	public String background;
-	public String name;
-	private String alpha = "abcdefgh";
+	public Piece piece;
+	public static String alpha = "abcdefgh";
 
-	public Square(boolean w, int x, int y){
-		background = w ? "\033[47m" : "\033[40m";
-		name = Character.toString(alpha.charAt(x))+(y+1);
-		
+	public Square(boolean w, Piece p){
+		background = w ? "\033[47m" : "\033[44m";
+		piece = p;
+	}
+
+	@Override
+	public void delete(){
+		background = "\033[0m";
+		piece = null;
 	}
 }
