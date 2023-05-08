@@ -110,14 +110,37 @@ public class Logic {
 			}
 
 			// CHECK: self discovered mate TODO
+			Board.futureBoard = Board.currentBoard;
+			String sideCode = isWhite? "w" : "b";
+			Board.futureBoard[row][file].piece = new Piece(Board.futureBoard[start[0]][start[1]].piece.codeValue, sideCode);
+			Board.futureBoard[start[0]][start[1]].piece = new Piece("e", "e");
 
-	
-			return false;
+			if (checkForCheckOnFuture(isWhite)){
+				return false;
+			}
+			
+			oldVals = start;
+			return true;
 		} catch (Exception e){return false;}
 		/* */
 	}
 
-	public static boolean checkForCMate(){ // TO DO
+	public static boolean checkForMate(){ // TODO: see document
+		if (checkForCheck(true)){
+			
+		} else if (checkForCheck(false)){
+
+		}
+
+		return false;
+	}
+
+	public static boolean checkForCheck(boolean isWhite){ // TODO: See doc
+		return false;
+	}
+
+
+	public static boolean checkForCheckOnFuture(boolean isWhite){ // TODO: same as above but with future board
 		return false;
 	}
 
@@ -126,7 +149,7 @@ public class Logic {
 		return oldVals;
 	}
 
-	private static boolean canCastle(boolean longCastle, boolean isWhite){
+	private static boolean canCastle(boolean longCastle, boolean isWhite){ // TODO: Needs to make sure none of the spaces are under attack
 		if ((isWhite && !castleStatus[0]) || (!isWhite && !castleStatus[1])){ // ultimate castle check
 			return false;
 		}

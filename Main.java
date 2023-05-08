@@ -125,7 +125,7 @@ public class Main {
 					Board.currentBoard[randRow][randCol].piece = new Piece(code, "w");
 				}
 
-				checkmate = Logic.checkForCMate();
+				checkmate = Logic.checkForMate();
 
 				// Black to move
 				if (whiteIsPlayer && !checkmate){
@@ -178,7 +178,7 @@ public class Main {
 				}
 
 				if (!checkmate){
-					checkmate = Logic.checkForCMate();
+					checkmate = Logic.checkForMate();
 				}
 			}
 
@@ -210,7 +210,7 @@ public class Main {
 					}
 				}
 
-				checkmate = Logic.checkForCMate();
+				checkmate = Logic.checkForMate();
 
 				while (!whiteIsPlayer && !checkmate){
 					Util.clear();
@@ -236,7 +236,7 @@ public class Main {
 				}
 
 				if (!checkmate){
-					checkmate = Logic.checkForCMate();
+					checkmate = Logic.checkForMate();
 
 				}
 			}
