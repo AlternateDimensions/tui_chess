@@ -1,11 +1,13 @@
 import java.util.Scanner;
+import java.util.Random;
+import java.util.ArrayList;
 
 public class Main {
 	private static boolean chatGPT = false;
 	private static int timer = 5;
 	private static Object[] settingVals = {chatGPT, timer, ""};
 	private static Scanner in;
-
+	private static Random random = new Random();
 
 	public static void main (String[] args) throws Exception {
 		String[] options = {"PLAY", "OPTIONS", "QUIT"};
@@ -23,8 +25,9 @@ public class Main {
 				}
 			} else {
 				for (int i = 1; i <= options.length; i++){
-					Util.typewriter(Colors.BOLD + Colors.RANDOM() + "{" + i + "} " + options[i-1], 10, true, true);
+					Util.typewriter(Colors.BOLD + Colors.RANDOM() + "{" + i + "} " + options[i-1], 0.01, true, true);
 				}
+
 			}
 			repeat = true;
 			Util.divider(false, true);
@@ -64,11 +67,10 @@ public class Main {
 	}
 
 	private static void play() throws Exception {
-		chatGPT = true;
 		if (chatGPT){
-			boolean whiteIsPlayer = (int) (Math.random()*2) == 1 ? true:false, checkmate = false;
-			whiteIsPlayer = true; // TEMP
-			Util.clear();
+			boolean whiteIsPlayer = random.nextBoolean(), checkmate = false;
+			ArrayList<int[]> chatGPTPieces;
+
 			Board.genBoard();
 			
 			while (!checkmate){
@@ -76,6 +78,7 @@ public class Main {
 				// White to move
 				if (whiteIsPlayer){
 					while (whiteToMove){
+						Util.clear();
 						Board.printBoard();
 
 						in = new Scanner(System.in);
@@ -84,32 +87,74 @@ public class Main {
 						}
 
 						Util.unlock();
-						System.out.print(Colors.RANDOM()+Colors.BOLD+"White to Move: "+Colors.CLEAR+Colors.UNDERLINE+Colors.RANDOM()+Colors.BOLD);
-						String move = in.nextLine();
+						System.out.print(Colors.WHITE+Colors.BOLD+"White to Move: "+Colors.CLEAR+Colors.UNDERLINE+Colors.RANDOM()+Colors.BOLD);
+						String move = in.nextLine().replace("x", "");
 						Util.lock();
-						if (Logic.checkMove(move, true)){
-							Board.updateBoard(move);
+						if (Logic.checkMove(move, whiteToMove)){
+							int[] oldVals = Logic.getOldVals();
+							Board.updateBoard(oldVals[0], oldVals[1], move, whiteToMove);
 							whiteToMove = false;
 						} else {
 							System.out.println(Colors.CLEAR+Colors.RED+Colors.BOLD+"This is an invalid move!"+Colors.CLEAR);
 							Util.wait(3.0);
-							Util.clear();
 						}
 					}
 				} else {
-					// Gather all pieces
-					// Pick between creating a piece
-					// Pick random square
+					boolean useCurrentPieces = random.nextBoolean();
+					String code = "";
+			
+					if (useCurrentPieces){
+						chatGPTPieces = new ArrayList<int[]>();
+						for (int i = 0; i < 8; i++){
+							for (int j = 0; j < 8; j++){
+								if (Board.currentBoard[i][j].piece.isWhite){
+									chatGPTPieces.add(new int[]{i, j});
+								}
+							}
+						}
+						int index = (int) (Math.random()*chatGPTPieces.size());
+						code = Board.currentBoard[chatGPTPieces.get(index)[0]][chatGPTPieces.get(index)[1]].piece.codeValue;
+						Board.currentBoard[chatGPTPieces.get(index)[0]][chatGPTPieces.get(index)[1]].piece = new Piece("e", "e");
+						
+					} else {
+						int randex = (int) (Math.random()*Piece.pieceCodeValues.length())+1;
+						code = Piece.pieceCodeValues.substring(randex-1, randex);
+					}
+
+					int randRow = (int) (Math.random()*8), randCol = (int) (Math.random()*8);
+					Board.currentBoard[randRow][randCol].piece = new Piece(code, "w");
 				}
 
+				checkmate = Logic.checkForCMate();
+
 				// Black to move
-				if (whiteIsPlayer){
-					// Gather all pieces
-					// Pick between creating a piece
-					// Pick random square
-					// Randomly decide to castle?
-				} else {
+				if (whiteIsPlayer && !checkmate){
+					boolean useCurrentPieces = random.nextBoolean();
+					String code = "";
+			
+					if (useCurrentPieces){
+						chatGPTPieces = new ArrayList<int[]>();
+						for (int i = 0; i < 8; i++){
+							for (int j = 0; j < 8; j++){
+								if (!Board.currentBoard[i][j].piece.isWhite){
+									chatGPTPieces.add(new int[]{i, j});
+								}
+							}
+						}
+						int index = (int) (Math.random()*chatGPTPieces.size());
+						code = Board.currentBoard[chatGPTPieces.get(index)[0]][chatGPTPieces.get(index)[1]].piece.codeValue;
+						Board.currentBoard[chatGPTPieces.get(index)[0]][chatGPTPieces.get(index)[1]].piece = new Piece("e", "e");
+						
+					} else {
+						int randex = (int) (Math.random()*Piece.pieceCodeValues.length())+1;
+						code = Piece.pieceCodeValues.substring(randex-1, randex);
+					}
+					
+					int randRow = (int) (Math.random()*8), randCol = (int) (Math.random()*8);
+					Board.currentBoard[randRow][randCol].piece = new Piece(code, "b");
+				} else if (!checkmate){
 					while (!whiteToMove){
+						Util.clear();
 						Board.printBoard();
 
 						in = new Scanner(System.in);
@@ -118,21 +163,83 @@ public class Main {
 						}
 
 						Util.unlock();
-						System.out.print(Colors.RANDOM()+Colors.BOLD+"Black to Move: "+Colors.CLEAR+Colors.UNDERLINE+Colors.RANDOM()+Colors.BOLD);
-						String move = in.nextLine();
+						System.out.print(Colors.BLACK+Colors.BOLD+"Black to Move: "+Colors.CLEAR+Colors.UNDERLINE+Colors.RANDOM()+Colors.BOLD);
+						String move = in.nextLine().replace("x", "");
 						Util.lock();
-						if (Logic.checkMove(move, false)){
-							Board.updateBoard(move);
+						if (Logic.checkMove(move, whiteToMove)){
+							int[] oldVals = Logic.getOldVals();
+							Board.updateBoard(oldVals[0], oldVals[1], move, whiteToMove);
 							whiteToMove = true;
 						} else {
 							System.out.println(Colors.CLEAR+Colors.RED+Colors.BOLD+"This is an invalid move!"+Colors.CLEAR);
 							Util.wait(3.0);
-							Util.clear();
 						}
 					}
 				}
+
+				if (!checkmate){
+					checkmate = Logic.checkForCMate();
+				}
 			}
 
+		} else {
+			Board.genBoard();
+			boolean whiteIsPlayer = true, checkmate = false;
+
+			while (!checkmate){
+				while (whiteIsPlayer){
+					Util.clear();
+					Board.printBoard();
+
+					in = new Scanner(System.in);
+					while(System.in.available() > 0) {
+						System.in.read(new byte[System.in.available()]);
+					}
+
+					Util.unlock();
+					System.out.print(Colors.WHITE+Colors.BOLD+"White to Move: "+Colors.CLEAR+Colors.UNDERLINE+Colors.RANDOM()+Colors.BOLD);
+					String move = in.nextLine().replace("x", "");
+					Util.lock();
+					if (Logic.checkMove(move, whiteIsPlayer)){
+						int[] oldVals = Logic.getOldVals();
+						Board.updateBoard(oldVals[0], oldVals[1], move, whiteIsPlayer);
+						whiteIsPlayer = false;
+					} else {
+						System.out.println(Colors.CLEAR+Colors.RED+Colors.BOLD+"This is an invalid move!"+Colors.CLEAR);
+						Util.wait(3.0);
+					}
+				}
+
+				checkmate = Logic.checkForCMate();
+
+				while (!whiteIsPlayer && !checkmate){
+					Util.clear();
+					Board.printBoard();
+
+					in = new Scanner(System.in);
+					while(System.in.available() > 0) {
+						System.in.read(new byte[System.in.available()]);
+					}
+
+					Util.unlock();
+					System.out.print(Colors.BLACK+Colors.BOLD+"Black to Move: "+Colors.CLEAR+Colors.UNDERLINE+Colors.RANDOM()+Colors.BOLD);
+					String move = in.nextLine().replace("x", "");
+					Util.lock();
+					if (Logic.checkMove(move, whiteIsPlayer)){
+						int[] oldVals = Logic.getOldVals();
+						Board.updateBoard(oldVals[0], oldVals[1], move, whiteIsPlayer);
+						whiteIsPlayer = true;
+					} else {
+						System.out.println(Colors.CLEAR+Colors.RED+Colors.BOLD+"This is an invalid move!"+Colors.CLEAR);
+						Util.wait(3.0);
+					}
+				}
+
+				if (!checkmate){
+					checkmate = Logic.checkForCMate();
+
+				}
+			}
 		}
 	}
 
@@ -143,9 +250,9 @@ public class Main {
 			Util.clear();
 			String[] settings = {"ChatGPT Mode", "Timer (Minutes)", "Quit"};
 			if (firstShow){
-				Util.typewriter(Colors.BOLD+Colors.RANDOM()+"--{{ Options }}--\n"+Colors.CLEAR,10, true, true);
+				Util.typewriter(Colors.BOLD+Colors.RANDOM()+"--{{ Options }}--\n"+Colors.CLEAR,0.01, true, true);
 				for (int i = 1; i <= settings.length; i++){
-					Util.typewriter(Colors.BOLD + Colors.RANDOM() + "{" + i + "} " + settings[i-1] + ": ", 10, true, false);
+					Util.typewriter(Colors.BOLD + Colors.RANDOM() + "{" + i + "} " + settings[i-1] + ": ", 0.01, true, false);
 					if (chatGPT && i == 1){
 						System.out.print(Colors.GREEN);
 					} else if (i == 1){
@@ -207,7 +314,7 @@ public class Main {
 							Util.lock();
 
 							timer = Integer.parseInt(valueInput);
-							System.out.println(Colors.CLEAR + Colors.BOLD + Colors.YELLOW +"[!!] Timer has been adjusted! [!!]" + Colors.CLEAR);
+							System.out.println(Colors.CLEAR + Colors.BOLD + Colors.YELLOW +"[!!] Timer has been adjusted, but timer is not used lmao :P [!!]" + Colors.CLEAR);
 							needValidTime = false;
 							updateVals();
 							Util.wait(3.0);

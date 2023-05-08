@@ -1,14 +1,13 @@
 public class Util {
-	public static void typewriter(String text, int delay, boolean random, boolean newline) throws Exception{
-		int actualDelay;
+	public static void typewriter(String text, double delay, boolean random, boolean newline) throws Exception{
+		double actualDelay;
 		for (char c : text.toCharArray()){
 			if (random){
-	        	actualDelay = (int) ((Math.random() * 101)) + delay;
+	        	actualDelay = ((int)(Math.random() * 51) + (delay*1000))/1000;
 	        } else {
 				actualDelay = delay;
 			}
-			wait((double) actualDelay);
-
+			wait(actualDelay);
 			System.out.print(c);
       	}
 

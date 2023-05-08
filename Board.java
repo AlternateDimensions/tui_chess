@@ -1,5 +1,6 @@
 public class Board extends GenericChessObject {
 	public static Square[][] currentBoard;
+	public static Square[][] futureBoard;
 
 	public static void genBoard() throws Exception {
 		String[][] pieces = new String[][]{
@@ -27,7 +28,19 @@ public class Board extends GenericChessObject {
 		}
 	}
 
-	public static void updateBoard(String move) throws Exception{
+	public static void updateBoard(int oldRow, int oldCol, String move, boolean isWhite) throws Exception{
+		currentBoard[oldRow][oldCol].piece = new Piece("e", "e");
+		if (Character.isAlphabetic(move.charAt(1))){ // not a pawn!
+			int col = Square.alpha.indexOf(move.substring(1,2).toLowerCase());
+			int row = (8-Integer.parseInt(move.substring(2)));
+			String code = move.substring(0, 1), sideCode = isWhite ? "w" : "b";
+			currentBoard[row][col].piece = new Piece(code, sideCode);
+		} else { // is a pawn!
+			int col = Square.alpha.indexOf(move.substring(0,1).toLowerCase());
+			int row = (8-Integer.parseInt(move.substring(1)));
+			String code = "P", sideCode = isWhite ? "w" : "b";
+			currentBoard[row][col].piece = new Piece(code, sideCode);
+		}
 	}
 
 	@Override
