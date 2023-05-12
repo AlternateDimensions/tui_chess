@@ -78,7 +78,7 @@ public class Main {
 			while (!checkmate){ // While not in checkmate
 				boolean validMove = false;
 
-				while (validMove){
+				while (!validMove){
 					Util.clear();
 					Board.printBoard();
 
@@ -134,7 +134,7 @@ public class Main {
 			while (!checkmate){ // While not in checkmate
 				boolean validMove = false;
 
-				while (validMove){
+				while (!validMove){
 					Util.clear();
 					Board.printBoard();
 
