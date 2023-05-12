@@ -1,11 +1,14 @@
 public class Square extends GenericChessObject {
 	public String background;
+	public int[] index;
 	public Piece piece;
-	public static String alpha = "abcdefgh";
+	public static String fileChars = "abcdefgh";
 
-	public Square(boolean w, Piece p){
+	public Square(int[] i, boolean w, String p){
+		super(i[0]+","+i[1]);
 		background = w ? "\033[47m" : "\033[44m";
-		piece = p;
+		index = i;
+		piece = new Piece(index, p);
 	}
 
 	@Override

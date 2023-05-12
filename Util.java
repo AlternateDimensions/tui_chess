@@ -53,5 +53,4 @@ public class Util {
 	public static void unlock() throws Exception {
 		Runtime.getRuntime().exec(new String[]{"/bin/sh", "-c", "stty echo </dev/tty"});
 	}
-
 }
