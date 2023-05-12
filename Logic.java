@@ -184,11 +184,11 @@ public class Logic {
         for (Square[] row : Board.currentBoard){
             for (Square sq : row){
                 if (sq.piece.codeValue.equals("K") && sq.piece.isWhite == isWhite){
-                    return true;
+                    return false;
                 }
             }
         }
-        return false;
+        return true;
     }
 
     public static int[] getValidStart(int denotedType, int denotedValue, int file, int row, int pieceType, boolean isWhite){
