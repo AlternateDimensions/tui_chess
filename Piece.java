@@ -19,7 +19,7 @@ public class Piece extends GenericChessObject {
 
 		int modifier = sideCode.equals("w") ? 6:0;
 
-		displayValue = sideCode.equals("e")? "":pieceDisplayValues.substring(pieceCodeValues.indexOf(codeValue)+modifier, pieceCodeValues.indexOf(codeValue)+modifier+1);
+		displayValue = sideCode.equals("e")? "   ":" "+pieceDisplayValues.substring(pieceCodeValues.indexOf(codeValue)+modifier, pieceCodeValues.indexOf(codeValue)+modifier+1)+" ";
 
 		castleable = codeValue.equals(pieceCodeValues.substring(0, 1));
 
